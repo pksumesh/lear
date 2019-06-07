@@ -29,7 +29,7 @@
                 <td class="checkbox-column">
                   <input type="checkbox" checked disabled/>
                 </td>
-                <td>11780</td>
+                <td>{{invoiceNumber}}</td>
                 <td>Pathfinder Cooperative</td>
                 <td>105023337BC0157</td>
                 <td>
@@ -69,11 +69,22 @@
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator'
 import moment from 'moment'
-
+//console.log(this.$route.query.inv_number)
 Vue.prototype.moment = moment
 
 export default {
-  name: "Payment"
+  name: "Payment",
+  data () {
+    return {
+        invoiceNumber : this.$route.query.inv_number
+    }
+  },
+  mounted(){
+    this.$store.commit('invoiceNumber', this.$route.query.inv_number)
+    this.$store.commit('pbcRefNumber', this.$route.query.pbc_ref_number)
+    this.$store.commit('redirectUrl', this.$route.query.redirect_uri)
+    console.log(this.$route.query.redirect_url)
+  }
 }
 </script>
 

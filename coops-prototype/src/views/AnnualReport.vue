@@ -420,6 +420,7 @@ import ARFilingDates from '@/components/ARFilingDates.vue'
 import EntityInfo from '@/components/EntityInfo.vue'
 import FeeSummary from '@/components/FeeSummary.vue'
 import moment from 'moment'
+import Axios from 'axios'
 
 Vue.use(Vue2Filters)
 Vue.prototype.moment = moment
@@ -645,7 +646,49 @@ export default {
 
     fileAndPay: function () {
       this.showLoading = true
-      setTimeout(() => { this.gotoPayment() }, 2000)
+      const payment_request = {
+        "payment_info": {
+          "method_of_payment": "CC"
+        },
+        "business_info": {
+          "business_identifier": "CP0015683",
+          "corp_type": "CP",
+          "business_name": "Pathfinder Housing Cooperative",
+          "contact_info": {
+            "city": "Victoria",
+            "postal_code": "V8P2P2",
+            "province": "BC",
+            "address_line_1": "100 Douglas Street",
+            "country": "CA"
+          }
+        },
+        "filing_info": {
+          "filing_types": []
+        }
+      }
+      for (let fee of this.$store.getters.getFees){
+        payment_request.filing_info.filing_types.push({"filing_type_code":fee.code, "filing_description":fee.name})
+      }
+      console.log(payment_request)
+      Axios.post(
+        process.env.VUE_APP_PAYMENTS_API,
+        payment_request,
+        {
+          headers: {
+            Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
+          }
+        }).then(response => {
+        if (response.data) {
+          console.log(response.data)
+          const current_url = process.env.VUE_APP_CLIENT_APP_URL
+          const pay_url = process.env.VUE_APP_MAKE_PAYMENT_URL
+          let window_loc = pay_url+response.data.id+'/'+encodeURIComponent(current_url)
+          console.log(window_loc)
+          window.location.href = window_loc
+        }
+      }).catch(response => {
+        console.error('Error', 'Login Error '+response)
+      })
     }
   }
 }

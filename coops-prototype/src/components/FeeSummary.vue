@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 export default {
   name: 'FeeSummary',
 
@@ -37,10 +38,18 @@ export default {
   }),
 
   methods: {
+    ...mapActions(['addFee']),
     addChangeAddressFee (index) {
       if (this.canAddAddressFee == true) {
-        this.fees.push({ id: 1, name: "Change Registered Office Addresses", value: 20.00 });
+        const fee = {
+          id: 1,
+          name: "Change Registered Office Addresses",
+          code:"OTADD",
+          value: 20.00
+          }
+        this.fees.push(fee);
         this.canAddAddressFee = !this.canAddAddressFee;
+        this.addFee({fee})
       }
       else {
         // Do nothing
@@ -48,8 +57,15 @@ export default {
     },
     addChangeDirectorFee (index) {
       if (this.canAddDirectorFee == true) {
-        this.fees.push({ id: 2, name: "Change Directors", value: 20.00 });
+        const fee = {
+          id: 2,
+          name: "Change Directors",
+          code:"OTCDR",
+          value: 20.00
+          }
+        this.fees.push(fee);
         this.canAddDirectorFee = !this.canAddDirectorFee;
+        this.addFee({fee})
       }
       else {
         // Do nothing

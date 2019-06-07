@@ -53,7 +53,7 @@
         </div>
         <div class="cc-form__row cc-form__btns">
           <v-btn color="warning" depressed to="/PaymentCart">Cancel & return to PayBC</v-btn>
-          <v-btn outline depressed to="/DashboardSuccess">Submit Payment</v-btn>
+          <v-btn outline @click="gotoDashboard">Submit Payment</v-btn>
         </div>
       </v-card-text>
     </v-card>
@@ -64,7 +64,13 @@
   import { Component, Vue } from 'vue-property-decorator'
 
   export default {
-    name: "Payment Information"
+    name: "Payment Information",
+    methods: {
+      gotoDashboard () {
+        window.location.href = this.$store.getters.redirectUrl
+      }
+    }
+
   }
 </script>
 

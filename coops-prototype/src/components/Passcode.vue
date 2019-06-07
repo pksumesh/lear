@@ -28,7 +28,7 @@
         <v-btn class="recovery-btn" color="primary" flat large @click.stop="noPasscodeDialog = true">
           Don't have a Passcode?
         </v-btn>
-        <v-btn class="sign-in-btn" color="primary" large to="/Dashboard" :disabled="!signInFormValid">
+        <v-btn class="sign-in-btn" color="primary" @click="login" :disabled="!signInFormValid">
           Sign in
           <v-icon right>arrow_forward</v-icon>
         </v-btn>
@@ -63,6 +63,7 @@
 </template>
 
 <script>
+import Axios from 'axios'
 export default {
   name: 'Passcode',
 
@@ -78,7 +79,26 @@ export default {
       v => !!v || 'Passcode is required',
       v => v.length >= 9 || 'Passcode must be exactly 9 digits'
     ]
-  })
+  }),
+  methods: {
+    login () {
+      console.log('entityNum '+this.entityNum)
+      console.log('entityPasscode '+this.entityPasscode)
+
+      Axios.post(process.env.VUE_APP_TOKEN_API, { username: this.entityNum, password: this.entityPasscode })
+      .then(response => {
+        if (response.data.error) {
+          console.error('Error', 'Login Error '+response.data.error)
+        } else if (response.data.access_token) {
+          console.log(response.data.access_token)
+          sessionStorage.access_token = response.data.access_token
+          this.$router.push('/AnnualReport')
+        }
+      }).catch(response => {
+        console.error('Error', 'Login Error '+response)
+      })
+    }
+  }
 };
 </script>
 

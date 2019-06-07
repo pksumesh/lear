@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --mode local",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "lint:nofix": "vue-cli-service lint --no-fix",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0-rc.1",
+    "axios": "^0.18.0",
     "moment": "^2.24.0",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.6",
