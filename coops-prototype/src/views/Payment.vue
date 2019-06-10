@@ -83,7 +83,6 @@ export default {
     this.$store.commit('invoiceNumber', this.$route.query.inv_number)
     this.$store.commit('pbcRefNumber', this.$route.query.pbc_ref_number)
     this.$store.commit('redirectUrl', this.$route.query.redirect_uri)
-    console.log(this.$route.query.redirect_url)
   }
 }
 </script>
