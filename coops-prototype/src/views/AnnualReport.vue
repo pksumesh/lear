@@ -33,7 +33,7 @@
           <header>
             <h2 class="mb-3">1. Annual General Meeting Date</h2>
             <v-card flat>
-              <ARFilingDates ref="ARFilingDate" v-on:childToParent="onChildClick"/>
+              <ARFilingDates ref="ARFilingDate" v-on:childToParent="onChildClick" :disabled="disableAll"/>
             </v-card>
           </header>
         </section>
@@ -64,7 +64,7 @@
                           <div class="address__row">{{DeliveryAddressCountry}}</div>
                         </div>
                         <div class="actions">
-                          <v-btn small outline color="primary"
+                          <v-btn small outline color="primary" :disabled="disableAll"
                             @click="editAddress">
                             Change
                           </v-btn>
@@ -203,7 +203,7 @@
             <v-expand-transition>
               <div v-show="!showNewDirectorForm">
                 <v-btn class="new-director-btn" outline color="primary"
-                  @click="addNewDirector">
+                  @click="addNewDirector" :disabled="disableAll">
                   <v-icon>add</v-icon>
                   <span>Appoint New Director</span>
                 </v-btn>
@@ -314,13 +314,16 @@
                         <div class="actions">
                           <v-btn small outline color="primary"
                             v-show="director.isNew"
-                            @click="editDirector(index)">
+                            @click="editDirector(index)"
+                            :disabled="disableAll">
                             <span>Change</span>
                           </v-btn>
 
                           <v-btn small outline color="primary"
                             v-show="!director.isNew"
-                            @click="removeDirector(director)">
+                            @click="removeDirector(director)"
+                            :disabled="disableAll"
+                            >
                             <span>{{director.isDirectorActive ? 'Cease':'Undo'}}</span>
                           </v-btn>
                         </div>
@@ -378,7 +381,7 @@
                         <div class="form__row form__btns">
                           <v-btn color="error"
                             v-show="director.isNew"
-                            @click="deleteDirector(index)">
+                            @click="deleteDirector(index)" >
                             <span>Remove</span>
                           </v-btn>
                           <v-btn class="form-primary-btn" color="primary"
@@ -405,8 +408,11 @@
     </v-container>
     <v-container class="pt-0">
       <div class="ar-filing-buttons">
-        <v-btn color="primary" large @click="fileAndPay"> File & Pay</v-btn>
-        <v-btn large to="/Dashboard">Cancel</v-btn>
+        <v-btn color="primary" large @click="fileAndPay" v-if="disableAll == false"> File & Pay</v-btn>
+        <v-btn color="primary" large @click="printReceipt" v-if="disableAll == true"> Print Receipt</v-btn>
+        <v-btn large to="/Dashboard" v-if="disableAll == false">Cancel</v-btn>
+        <v-btn color="primary" large to="/Dashboard" v-if="disableAll == true">Go to Dashboard</v-btn>
+
       </div>
     </v-container>
   </div>
@@ -437,6 +443,7 @@ export default {
 
   data () {
     return {
+      disableAll: false,
       agmDate: '',
       isAgmStepComplete: false,
 
@@ -680,16 +687,40 @@ export default {
         }).then(response => {
         if (response.data) {
           console.log(response.data)
-          const current_url = process.env.VUE_APP_CLIENT_APP_URL
+          const current_url = process.env.VUE_APP_CLIENT_APP_URL+'?pay_id='+response.data.id
           const pay_url = process.env.VUE_APP_MAKE_PAYMENT_URL
           let window_loc = pay_url+response.data.id+'/'+encodeURIComponent(current_url)
-          console.log(window_loc)
+          this.$store.commit('payIdentifier', response.data.id)
           window.location.href = window_loc
         }
       }).catch(response => {
         console.error('Error', 'Login Error '+response)
       })
+    },
+    printReceipt: function(){
+      Axios.get(
+        process.env.VUE_APP_RECEIPTS_API+'/payments/'+this.$route.query.pay_id,
+        {
+          headers: {
+            Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
+          }
+        }).then(response => {
+          if (response.data) {
+            console.log(response.data)
+          }
+      }).catch(response => {
+        console.error('Error', 'Login Error '+response)
+      })
     }
+  },
+  mounted(){
+    let pay_id = this.$route.query.pay_id
+    let receipt_num = this.$route.query.receipt_number
+    console.log('pay_id = '+pay_id+', receipt_num = '  +receipt_num)
+    if (pay_id){
+      this.disableAll=true
+    }
+
   }
 }
 </script>

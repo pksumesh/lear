@@ -8,7 +8,8 @@ export default new Vuex.Store({
     fees: [],
     invoiceNumber: null,
     pbcRefNumber: null,
-    redirectUrl: null
+    redirectUrl: null,
+    payIdentifier: null
   },
   mutations: {
     addFee(state, fee) {
@@ -32,6 +33,9 @@ export default new Vuex.Store({
     redirectUrl (state, redirectUrl) {
       state.redirectUrl = redirectUrl
       console.log(state.redirectUrl)
+    },
+    payIdentifier(state, payIdentifier){
+      state.payIdentifier = payIdentifier
     }
   },
   actions: {
@@ -45,6 +49,7 @@ export default new Vuex.Store({
     },
     invoiceNumber: (state) => state.invoiceNumber,
     pbcRefNumber: (state) => state.pbcRefNumber,
-    redirectUrl: (state) => state.redirectUrl
+    redirectUrl: (state) => state.redirectUrl,
+    payIdentifier: (state) => state.payIdentifier
   }
 })

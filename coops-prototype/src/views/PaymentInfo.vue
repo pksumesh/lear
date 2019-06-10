@@ -67,7 +67,7 @@
     name: "Payment Information",
     methods: {
       gotoDashboard () {
-        window.location.href = this.$store.getters.redirectUrl
+        window.location.href = this.$store.getters.redirectUrl+'?receipt_number=123451'
       }
     }
 
