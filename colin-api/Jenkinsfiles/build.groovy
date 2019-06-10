@@ -22,7 +22,6 @@
 def COMPONENT_NAME = 'colin-api'
 def COMPONENT_NAME_INTER = 'colin-api-base'
 def TAG_NAME = 'dev'
-def NAMESPACE = 'gl2uos'
 
 // define groovy functions
 import groovy.json.JsonOutput
@@ -117,7 +116,7 @@ node {
 
             echo "Building ${COMPONENT_NAME_INTER} ..."
             def build = openshift.selector("bc", "${COMPONENT_NAME_INTER}")
-            build.startBuild().logs("-f")
+            build.startBuild("--wait=true").logs("-f")
           }
         }
       }
@@ -129,7 +128,7 @@ node {
 
             echo "Building ${COMPONENT_NAME} ..."
             def build = openshift.selector("bc", "${COMPONENT_NAME}")
-            build.startBuild().logs("-f")
+            build.startBuild("--wait=true").logs("-f")
           }
         }
       }

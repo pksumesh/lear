@@ -6,9 +6,8 @@
 </template>
 <script>
 import StdHeader from '@/components/StdHeader.vue'
-
 export default {
-  name: 'App.vue',
+  name: 'App',
   components: {
     StdHeader
   },
@@ -43,4 +42,6 @@ export default {
 <style lang="stylus">
   @import "./assets/styles/base.styl";
   @import "./assets/styles/layout.styl";
+  .view-container, .container
+    width 100%
 </style>
