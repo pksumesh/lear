@@ -12,7 +12,7 @@
           <h2>Credit Card Cart</h2>
           <span class="header-total">
             <label>Total:</label>
-            <strong>$ 70.00</strong>
+            <strong>${{totalFees}}</strong>
             <small>(1 items)</small>
           </span>
         </header>
@@ -39,19 +39,18 @@
                 <td>n/a</td>
                 <td>Pathfinder Cooperative</td>
                 <td>105023337BC0157</td>
-                <td>11780</td>
+                <td>{{invoiceNumber}}</td>
                 <td>BC Registries Co-op Filings</td>
                 <td>{{moment(date).format('YYYY/MM/DD')}}</td>
                 <td>
                   <div>
-                    $70.00
+                    ${{totalFees}}
                   </div>
                 </td>
-                <td>$70.00</td>
+                <td>${{totalFees}}</td>
                 <td>
-                  <div class="form-input ">
-                    <div class="prefix">$</div>
-                    <input type="number" class="payment-input" value="70.00" disabled/>
+                  <div>
+                    ${{totalFees}}
                   </div>
                 </td>
                 <td>
@@ -64,11 +63,7 @@
         <footer>
           <v-btn class="add-more-btn" color="info" depressed to="/Payment"><v-icon small>search</v-icon>Add more Quick Pay Items</v-btn>
           <div class="checkout-info">
-            <label>Total:</label>
-            <div class="form-input">
-              <div class="prefix">$</div>
-              <input type="number" class="payment-input" value="70.00" disabled/>
-            </div>
+            <label>Total: $ {{totalFees}}</label>
             <v-btn class="checkout-btn" color="success" depressed to="/PaymentInfo">Proceed to Credit Cart Payment</v-btn>
           </div>
         </footer>
@@ -88,6 +83,8 @@
 
     data () {
       return {
+        totalFees: this.$store.getters.totalFees,
+        invoiceNumber : this.$store.getters.invoiceNumber,
       }
     }
   }

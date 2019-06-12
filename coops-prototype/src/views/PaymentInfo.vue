@@ -8,13 +8,13 @@
         <div class="cc-form__row">
           <label>Invoice/Order Number:</label>
           <div class="value-static">
-            11700
+            {{invoiceNumber}}
           </div>
         </div>
         <div class="cc-form__row">
           <label>Amount:</label>
           <div class="value-static">
-            $70.00
+            ${{totalFees}}
           </div>
         </div>
         <div class="cc-form__row">
@@ -65,6 +65,12 @@
 
   export default {
     name: "Payment Information",
+    data () {
+      return {
+        totalFees: this.$store.getters.totalFees,
+        invoiceNumber : this.$store.getters.invoiceNumber
+      }
+    },
     methods: {
       gotoDashboard () {
         window.location.href = this.$store.getters.redirectUrl+'?receipt_number=123451'

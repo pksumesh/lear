@@ -38,9 +38,8 @@
                   </div>
                 </td>
                 <td>
-                  <div class="form-input">
-                    <div class="prefix">$</div>
-                    <input type="number" class="payment-input" value="70.00" disabled/>
+                  <div>
+                    ${{totalFees}}
                   </div>
                 </td>
                 <td>
@@ -69,6 +68,8 @@
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator'
 import moment from 'moment'
+import Axios from 'axios'
+
 //console.log(this.$route.query.inv_number)
 Vue.prototype.moment = moment
 
@@ -76,13 +77,38 @@ export default {
   name: "Payment",
   data () {
     return {
-        invoiceNumber : this.$route.query.inv_number
+        invoiceNumber : this.$route.query.inv_number,
+        totalFees: 0
     }
   },
   mounted(){
     this.$store.commit('invoiceNumber', this.$route.query.inv_number)
     this.$store.commit('pbcRefNumber', this.$route.query.pbc_ref_number)
-    this.$store.commit('redirectUrl', this.$route.query.redirect_uri)
+    let redirect_url = this.$route.query.redirect_uri
+    this.$store.commit('redirectUrl', redirect_url)
+    console.log(this.$route.query.redirect_uri)
+    let pay_id = redirect_url.split('/')[redirect_url.split('/').length-3]
+     Axios.get(
+        process.env.VUE_APP_PAYMENTS_API+'/'+pay_id,
+        {
+          headers: {
+            Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
+          }
+        }).then(response => {
+          if (response.data) {
+                let totalFees = 0
+
+          console.log(response.data)
+          response.data.invoices[0].line_items.forEach((line, index) => {
+            totalFees += line.filing_fees
+          });
+          console.log(totalFees)
+          this.totalFees = totalFees
+          this.$store.commit('totalFees', totalFees)
+        }
+      }).catch(response => {
+        console.error('Error', 'Login Error '+response)
+      })
   }
 }
 </script>

@@ -9,19 +9,12 @@ export default new Vuex.Store({
     invoiceNumber: null,
     pbcRefNumber: null,
     redirectUrl: null,
-    payIdentifier: null
+    payIdentifier: null,
+    totalFees: null
   },
   mutations: {
     addFee(state, fee) {
-      if (state.fees.length == 0) {
-        const defaultFee = {
-          id: "annualReport",
-          name: "Annual Report Filing",
-          code: "OTANN",
-          value: 30.00
-        }
-        state.fees.push(defaultFee)
-      }
+
       state.fees.push(fee);
     },
     invoiceNumber (state, invoiceNumber) {
@@ -40,6 +33,9 @@ export default new Vuex.Store({
     fees(state, fees){
       console.log(fees)
       state.fees = fees
+    },
+    totalFees(state, totalFees){
+      state.totalFees = totalFees
     }
   },
   actions: {
@@ -49,11 +45,20 @@ export default new Vuex.Store({
   },
   getters: {
     getFees(state) {
+        const defaultFee = {
+          id: "annualReport",
+          name: "Annual Report Filing",
+          code: "OTANN",
+          value: 30.00
+        }
+        state.fees.push(defaultFee)
+
         return state.fees;
     },
     invoiceNumber: (state) => state.invoiceNumber,
     pbcRefNumber: (state) => state.pbcRefNumber,
     redirectUrl: (state) => state.redirectUrl,
-    payIdentifier: (state) => state.payIdentifier
+    payIdentifier: (state) => state.payIdentifier,
+    totalFees: (state) => state.totalFees
   }
 })

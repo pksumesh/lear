@@ -94,7 +94,7 @@ export default {
           if (response.data) {
           console.log(response.data)
           let fees = []
-          response.data.payment_invoices[0].payment_line_items.forEach((line, index) => {
+          response.data.invoices[0].line_items.forEach((line, index) => {
             fees.push({
               id: index + 1,
               name: line.description,
