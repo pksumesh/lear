@@ -36,6 +36,10 @@ export default new Vuex.Store({
     },
     payIdentifier(state, payIdentifier){
       state.payIdentifier = payIdentifier
+    },
+    fees(state, fees){
+      console.log(fees)
+      state.fees = fees
     }
   },
   actions: {

@@ -21,6 +21,8 @@
 
 <script>
 import {mapActions} from 'vuex'
+import Axios from 'axios'
+
 export default {
   name: 'FeeSummary',
 
@@ -78,6 +80,36 @@ export default {
       return this.fees.reduce((acc, item) => acc + item.value, 0);
     },
   },
+  mounted(){
+    let pay_id = this.$route.query.pay_id
+    if (pay_id){
+      // Get the fees information and show it in fees cart
+        Axios.get(
+        process.env.VUE_APP_PAYMENTS_API+'/'+pay_id,
+        {
+          headers: {
+            Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
+          }
+        }).then(response => {
+          if (response.data) {
+          console.log(response.data)
+          let fees = []
+          response.data.payment_invoices[0].payment_line_items.forEach((line, index) => {
+            fees.push({
+              id: index + 1,
+              name: line.description,
+              value: line.filing_fees
+            })
+          });
+          this.fees = fees
+        }
+      }).catch(response => {
+        console.error('Error', 'Login Error '+response)
+      })
+
+    }
+
+  }
 };
 </script>
 
