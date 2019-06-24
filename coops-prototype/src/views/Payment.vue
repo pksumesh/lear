@@ -89,23 +89,32 @@ export default {
     console.log(this.$route.query.redirect_uri)
     let pay_id = redirect_url.split('/')[redirect_url.split('/').length-3]
      Axios.get(
-        process.env.VUE_APP_PAYMENTS_API+'/'+pay_id,
+        process.env.VUE_APP_PAYMENTS_API+'/api/v1/payments/'+pay_id,
         {
           headers: {
             Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
           }
         }).then(response => {
           if (response.data) {
-                let totalFees = 0
+            let totalFees = 0
 
-          console.log(response.data)
-          response.data.invoices[0].line_items.forEach((line, index) => {
-            totalFees += line.filing_fees
-          });
-          console.log(totalFees)
-          this.totalFees = totalFees
-          this.$store.commit('totalFees', totalFees)
-        }
+            console.log(response.data)
+            Axios.get(
+            process.env.VUE_APP_PAYMENTS_API+response.data.invoices[0]._links.self,
+            {
+              headers: {
+                Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
+              }
+            }).then(response => {
+              response.data.line_items.forEach((line, index) => {
+                totalFees += line.filing_fees
+              });
+              console.log(totalFees)
+              this.totalFees = totalFees
+              this.$store.commit('totalFees', totalFees)
+            })
+          }
+
       }).catch(response => {
         console.error('Error', 'Login Error '+response)
       })

@@ -678,7 +678,7 @@ export default {
       }
       console.log(payment_request)
       Axios.post(
-        process.env.VUE_APP_PAYMENTS_API,
+        process.env.VUE_APP_PAYMENTS_API+'/api/v1/payments',
         payment_request,
         {
           headers: {
@@ -698,7 +698,7 @@ export default {
       })
     },
     printReceipt: function(){
-      Axios.get(
+      Axios.post(
         process.env.VUE_APP_RECEIPTS_API+'/payments/'+this.$route.query.pay_id,
         {
           headers: {

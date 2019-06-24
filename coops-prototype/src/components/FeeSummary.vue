@@ -85,23 +85,44 @@ export default {
     if (pay_id){
       // Get the fees information and show it in fees cart
         Axios.get(
-        process.env.VUE_APP_PAYMENTS_API+'/'+pay_id,
+        process.env.VUE_APP_PAYMENTS_API+'/api/v1/payments/'+pay_id,
         {
           headers: {
             Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
           }
         }).then(response => {
           if (response.data) {
-          console.log(response.data)
-          let fees = []
-          response.data.invoices[0].line_items.forEach((line, index) => {
-            fees.push({
-              id: index + 1,
-              name: line.description,
-              value: line.filing_fees
-            })
-          });
-          this.fees = fees
+            console.log(response.data)
+            let fees = []
+            Axios.get(
+              process.env.VUE_APP_PAYMENTS_API+'/api/v1/payments/'+pay_id,
+            {
+              headers: {
+                Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
+            }
+            }).then(response => {
+              if (response.data) {
+                let totalFees = 0
+
+                console.log(response.data)
+                Axios.get(
+                  process.env.VUE_APP_PAYMENTS_API+response.data.invoices[0]._links.self,
+                {
+                  headers: {
+                    Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
+                  }
+                }).then(response => {
+                  response.data.line_items.forEach((line, index) => {
+                    fees.push({
+                      id: index + 1,
+                      name: line.description,
+                      value: line.filing_fees
+                    })
+                  })
+                  this.fees = fees
+                })
+              }
+          })
         }
       }).catch(response => {
         console.error('Error', 'Login Error '+response)
