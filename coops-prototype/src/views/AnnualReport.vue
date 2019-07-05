@@ -677,7 +677,7 @@ export default {
         payment_request.filing_info.filing_types.push({"filing_type_code":fee.code, "filing_description":fee.name})
       }
       console.log("-----------------Annual Report VUE"+payment_request)
-      Axios.post('/pay/api//payments',
+      Axios.post('/pay/api/payments',
         payment_request,
         {
           headers: {
