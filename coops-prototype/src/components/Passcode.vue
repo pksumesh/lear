@@ -82,7 +82,7 @@ export default {
   }),
   methods: {
     login () {
-      console.log('entityNum '+this.entityNum)
+      console.log('entityNum---------- '+this.entityNum)
       console.log('entityPasscode '+this.entityPasscode)
       console.log(process.env.VUE_APP_TOKEN_API)
       console.log(Axios)
