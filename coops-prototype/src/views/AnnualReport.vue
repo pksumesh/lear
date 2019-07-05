@@ -676,9 +676,8 @@ export default {
       for (let fee of this.$store.getters.getFees){
         payment_request.filing_info.filing_types.push({"filing_type_code":fee.code, "filing_description":fee.name})
       }
-      console.log(payment_request)
-      Axios.post(
-        process.env.VUE_APP_PAYMENTS_API+'/api/v1/payments',
+      console.log("-----------------Annual Report VUE"+payment_request)
+      Axios.post('/pay/api//payments',
         payment_request,
         {
           headers: {
