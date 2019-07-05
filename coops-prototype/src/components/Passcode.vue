@@ -86,7 +86,7 @@ export default {
       console.log('entityPasscode '+this.entityPasscode)
       console.log(process.env.VUE_APP_TOKEN_API)
       console.log(Axios)
-      Axios.post('/token', { username: this.entityNum, password: this.entityPasscode })
+      Axios.post('/auth/api/token', { username: this.entityNum, password: this.entityPasscode })
       .then(response => {
         if (response.data.error) {
           console.error('Error', 'Login Error '+response.data.error)
